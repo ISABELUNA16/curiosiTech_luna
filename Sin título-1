@@ -1,0 +1,96 @@
+CREATE TABLE Customer(
+    CustomerID            NUMBER NOT NULL,
+    FirstName             VARCHAR2 NOT NULL,
+    LastName              VARCHAR2 NOT NULL,
+    Email                 VARCHAR2 NULL,
+    PhoneNumber           VARCHAR2 NULL
+    
+);
+
+
+
+-- INSERT 
+CREATE PROCEDURE insert_test
+	   @FirstName varchar(20),
+	   @LastName varchar(20),
+	   @Email	varchar(20),
+	   @PhoneNumber int
+	 
+AS
+BEGIN
+INSERT INTO Customer  (
+	   FirstName,
+	   LastName,
+	   Email,
+	   PhoneNumber)
+    VALUES (
+	   @FirstName,
+	   @LastName,
+	   @Email,
+	   @PhoneNumber)
+ 
+SET @CustomerID = SCOPE_IDENTITY()
+ 
+SELECT 
+	   FirstName = @FirstName,
+	   LastName = @LastName,
+	   Email	= @Email,
+	   PhoneNumber =@PhoneNumber
+FROM Customer 
+WHERE  CustomerID = @CustomerID
+END
+
+
+
+-- SELECT
+CREATE PROC select_test
+    @CustomerID int
+AS 
+BEGIN 
+ 
+    SELECT CustomerID, FirstName, LastName, Email, PhoneNumber
+    FROM   Customer  
+    WHERE  (CustomerID = @CustomerID) 
+END
+
+-- UPDATE
+
+CREATE PROC update_test
+    @CustomerID int,
+    @FirstName varchar(20),
+    @LastName varchar(20),
+    @Email varchar(20),
+    @PhoneNumber int
+  
+AS 
+BEGIN 
+ 
+UPDATE Customer
+SET  FirstName = @FirstName,
+     LastName = @LastName, 
+     Email = @Email,
+     PhoneNumber = @PhoneNumber
+WHERE  CustomerID = @CustomerID
+END
+
+-- DELETE
+
+CREATE PROC delete_test
+    @CustomerID int
+AS 
+BEGIN 
+DELETE
+FROM   Customer
+WHERE  CustomerID = @CustomerID
+ 
+END
+
+-- PACKAGE
+
+CREATE PACKAGE trans_data AS 
+   PROCEDURE insert_test(FirstName,LastName,Email,PhoneNumber); 
+   PROCEDURE update_test(CustomerID, FirstName, LastName , Email, PhoneNumber);
+   PROCEDURE select_test(CustomerID);
+   PROCEDURE delete_test(CustomerID);
+  
+END trans_data;
